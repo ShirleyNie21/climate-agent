@@ -13,14 +13,14 @@ if data["start_time"] is None:
 start_time = datetime.fromisoformat(data["start_time"])
 current_time = datetime.utcnow()
 
-# check 24-hour rule
+# 24-hour stopping rule
 elapsed = current_time - start_time
 
 if elapsed > timedelta(hours=24):
     print("⛔ 24 hours passed. Agent stopping.")
     exit()
 
-# 🌡️ REAL TEMPERATURE DATA (THIS IS THE PART YOU WERE MISSING)
+# 🌡️ fetch real temperature (Open-Meteo API)
 lat = 40.71
 lon = -74.00
 
@@ -37,8 +37,15 @@ data["readings"].append({
     "temperature": temperature
 })
 
+# 📊 simple analysis
+temps = [r["temperature"] for r in data["readings"]]
+
+if len(temps) > 0:
+    avg_temp = sum(temps) / len(temps)
+    print("📊 Average temperature:", avg_temp)
+
 print("✅ Temperature recorded:", temperature)
 
-# save back
+# save memory
 with open("data.json", "w") as f:
     json.dump(data, f, indent=2)
