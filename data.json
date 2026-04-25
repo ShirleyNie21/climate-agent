@@ -1,5 +1,12 @@
-{
-  "temperature": 15,
-  "time": "2026-04-25T14:00",
-  "location": "Summit"
-}
+[
+  {
+    "temperature": 12,
+    "time": "2026-04-25T12:00",
+    "location": "Summit"
+  },
+  {
+    "temperature": 15,
+    "time": "2026-04-25T13:00",
+    "location": "Summit"
+  }
+]
