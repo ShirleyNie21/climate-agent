@@ -6,4 +6,4 @@ response = requests.get(url)
 
 data = response.json()
 
-print(data)
+print(data["current_weather"]["temperature"])
