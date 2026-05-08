@@ -1,3 +1,4 @@
+print("🚀 agent started")
 import json
 import requests
 from datetime import datetime, timedelta
