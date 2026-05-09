@@ -3,28 +3,34 @@ from datetime import datetime
 
 FILE = "data.json"
 
-# load existing data
+print("🚀 Agent started")
+
+# load file
 try:
     with open(FILE, "r") as f:
         data = json.load(f)
 except:
     data = {"readings": []}
 
-# make sure structure exists
+# ensure structure
 if "readings" not in data:
     data["readings"] = []
 
-# new reading
-new_reading = {
-    "temp": 13.1,
+# fake or real temp (keep yours if you already have API value)
+temp = 13.1
+
+print("🌡️ Temp:", temp)
+
+# append new reading
+data["readings"].append({
+    "temp": temp,
     "time": datetime.now().isoformat()
-}
+})
 
-# append it
-data["readings"].append(new_reading)
+print("🧠 Updated data:", data)
 
-# save back
+# force write
 with open(FILE, "w") as f:
     json.dump(data, f, indent=2)
 
-print("✅ Saved reading")
+print("💾 WROTE TO FILE")
