@@ -4,7 +4,7 @@ import streamlit as st
 st.title("🌤️ Weather Dashboard")
 
 # -------------------------
-# LOAD DATA (SAFE)
+# LOAD DATA
 # -------------------------
 try:
     with open("data.json", "r") as f:
@@ -18,7 +18,7 @@ readings = data.get("readings", [])
 st.write("Total readings:", len(readings))
 
 # -------------------------
-# MANUAL REFRESH
+# REFRESH CONTROL
 # -------------------------
 if st.button("🔄 Refresh Data"):
     st.rerun()
@@ -39,12 +39,11 @@ if readings:
     )
 
     st.caption(f"Last updated: {latest['time']}")
-    
 else:
     st.write("No data yet — run agent.py first")
 
 # -------------------------
-# CHART
+# TEMPERATURE CHART
 # -------------------------
 st.subheader("📊 Temperature History")
 
@@ -67,14 +66,16 @@ st.subheader("📈 Quick Stats")
 if readings:
     temps = [r["temperature"] for r in readings]
 
-    st.write("Average:", sum(temps) / len(temps))
-    st.write("Max:", max(temps))
-    st.write("Min:", min(temps))
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Average", f"{sum(temps)/len(temps):.1f} °C")
+    col2.metric("Max", f"{max(temps):.1f} °C")
+    col3.metric("Min", f"{min(temps):.1f} °C")
 else:
     st.write("Not enough data yet — run agent.py first")
 
 # -------------------------
-# AUTO REFRESH (OPTIONAL ONLY)
+# AUTO REFRESH
 # -------------------------
 if auto_refresh:
     import time
