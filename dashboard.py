@@ -1,3 +1,4 @@
+st_autorefresh(interval=5000, key="refresh")
 import time
 import json
 import streamlit as st
