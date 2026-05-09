@@ -1,9 +1,12 @@
-cat > agent.py << 'EOF'
 import requests
 import json
 from datetime import datetime
 
 print("🚀 Agent started")
+
+# load existing data
+with open("data.json", "r") as f:
+    data_store = json.load(f)
 
 lat = 40.71
 lon = -74.00
@@ -18,4 +21,13 @@ print("🌐 API response received")
 temperature = data["current_weather"]["temperature"]
 
 print("🌡️ Temperature:", temperature)
-EOF
+
+# add new reading
+data_store["readings"].append({
+    "time": datetime.utcnow().isoformat(),
+    "temperature": temperature
+})
+
+# save back to file
+with open("data.json", "w") as f:
+    json.dump(data_store, f, indent=2)
