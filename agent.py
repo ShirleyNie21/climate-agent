@@ -34,6 +34,9 @@ data["readings"].append({
     "time": datetime.now().isoformat()
 })
 
+# keep only newest 50 readings
+data["readings"] = data["readings"][-50:]
+
 with open(FILE, "w") as f:
     json.dump(data, f, indent=2)
 
