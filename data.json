@@ -3,23 +3,32 @@ import streamlit as st
 
 st.title("🌤️ Weather Dashboard")
 
+# load data
 with open("data.json", "r") as f:
     data = json.load(f)
 
 readings = data["readings"]
 
-st.subheader("📌 Latest Reading")
+# total readings
+st.write("Total readings:", len(readings))
 
+# latest reading (SAFE)
+st.subheader("📌 Latest Reading")
 if len(readings) > 0:
     st.write(readings[-1])
 else:
     st.write("No data yet — run agent.py first")
 
+# history chart
 st.subheader("📊 Temperature History")
-
 temps = [r["temperature"] for r in readings]
-st.line_chart(temps)
 
+if len(temps) > 0:
+    st.line_chart(temps)
+else:
+    st.write("No data for chart yet")
+
+# stats (SAFE)
 st.subheader("📈 Quick Stats")
 
 if len(temps) > 0:
