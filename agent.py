@@ -1,28 +1,33 @@
+cat > agent.py << 'EOF'
 import json
 import os
+from datetime import datetime
 
-print("🚀 TEST START")
+print("🚀 CLEAN AGENT RUNNING")
 
 FILE = os.path.join(os.path.dirname(__file__), "data.json")
 
-print("📍 Writing to:", FILE)
+# load safely
+try:
+    with open(FILE, "r") as f:
+        data = json.load(f)
+except:
+    data = {"readings": []}
 
-data = {"readings": []}
+temp = 13.4
+
+print("🌡️ Temp:", temp)
 
 data["readings"].append({
-    "temperature": 999,
-    "time": "TEST"
+    "temperature": temp,
+    "time": datetime.now().isoformat()
 })
-
-print("💾 About to write...")
 
 with open(FILE, "w") as f:
     json.dump(data, f, indent=2)
 
-print("✅ WRITE DONE")
+print("💾 SAVED SUCCESSFULLY")
 
-# verify immediately
 with open(FILE, "r") as f:
-    check = json.load(f)
-
-print("📂 AFTER WRITE:", check)
+    print("📂 FINAL FILE:", json.load(f))
+EOF
