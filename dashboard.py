@@ -31,7 +31,15 @@ auto_refresh = st.checkbox("Auto-refresh every 5 seconds")
 st.subheader("📌 Latest Reading")
 
 if readings:
-    st.write(readings[-1])
+    latest = readings[-1]
+
+    st.metric(
+        label="Current Temperature",
+        value=f"{latest['temperature']} °C"
+    )
+
+    st.caption(f"Last updated: {latest['time']}")
+    
 else:
     st.write("No data yet — run agent.py first")
 
