@@ -38,7 +38,13 @@ if readings:
         value=f"{latest['temperature']} °C"
     )
 
-    st.caption(f"Last updated: {latest['time']}")
+from datetime import datetime
+
+formatted_time = datetime.fromisoformat(
+    latest["time"]
+).strftime("%b %d, %Y • %I:%M %p")
+
+st.caption(f"Last updated: {formatted_time}")
 else:
     st.write("No data yet — run agent.py first")
 
