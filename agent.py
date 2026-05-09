@@ -5,7 +5,7 @@ print("🚀 Agent started")
 
 FILE = "data.json"
 
-# load existing file
+# load existing file safely
 try:
     with open(FILE, "r") as f:
         data = json.load(f)
@@ -18,14 +18,14 @@ print("📂 Loaded:", data)
 if "readings" not in data:
     data["readings"] = []
 
-# your temperature (you already have this from API)
+# simulated temperature (replace with API later if needed)
 temp = 13.1
 
 print("🌡️ Temperature:", temp)
 
-# THIS is the critical missing step
+# append NEW reading (IMPORTANT: must match dashboard.py)
 data["readings"].append({
-    "temp": temp,
+    "temperature": temp,
     "time": datetime.now().isoformat()
 })
 
