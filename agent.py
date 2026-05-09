@@ -1,20 +1,26 @@
 import json
 from datetime import datetime
 
-data = []
+FILE = "data.json"
 
-new_entry = {
+# 1. Load existing data
+try:
+    with open(FILE, "r") as f:
+        data = json.load(f)
+except:
+    data = {"readings": []}
+
+# 2. Create new reading
+new_reading = {
     "temp": 13.1,
     "time": datetime.now().isoformat()
 }
 
-try:
-    with open("data.json", "r") as f:
-        data = json.load(f)
-except:
-    data = []
+# 3. Append it properly
+data["readings"].append(new_reading)
 
-data.append(new_entry)
-
-with open("data.json", "w") as f:
+# 4. Save back
+with open(FILE, "w") as f:
     json.dump(data, f, indent=2)
+
+print("✅ Saved:", new_reading)
