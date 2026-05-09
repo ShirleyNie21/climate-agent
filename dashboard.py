@@ -1,3 +1,4 @@
+import time
 import json
 import streamlit as st
 import time
@@ -62,3 +63,7 @@ else:
 if auto_refresh:
     time.sleep(5)
     st.rerun()
+
+# auto refresh every 5 seconds
+time.sleep(5)
+st.rerun()
