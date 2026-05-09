@@ -41,7 +41,12 @@ st.subheader("📊 Temperature History")
 temps = [r["temperature"] for r in readings]
 
 if len(temps) > 0:
-    st.line_chart(temps)
+    chart_data = {
+        "Time": [r["time"][-8:] for r in readings],
+        "Temperature": temps
+    }
+    
+    st.line_chart(chart_data, x="Time", y="Temperature")
 else:
     st.write("No data for chart yet")
 
