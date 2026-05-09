@@ -1,3 +1,4 @@
+import time
 cat > dashboard.py << 'EOF'
 import json
 import streamlit as st
