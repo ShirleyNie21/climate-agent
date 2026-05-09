@@ -1,33 +1,20 @@
-import requests
 import json
 from datetime import datetime
 
-print("🚀 Agent started")
+data = []
 
-# load existing data
-with open("data.json", "r") as f:
-    data_store = json.load(f)
+new_entry = {
+    "temp": 13.1,
+    "time": datetime.now().isoformat()
+}
 
-lat = 40.71
-lon = -74.00
+try:
+    with open("data.json", "r") as f:
+        data = json.load(f)
+except:
+    data = []
 
-url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+data.append(new_entry)
 
-response = requests.get(url)
-data = response.json()
-
-print("🌐 API response received")
-
-temperature = data["current_weather"]["temperature"]
-
-print("🌡️ Temperature:", temperature)
-
-# add new reading
-data_store["readings"].append({
-    "time": datetime.utcnow().isoformat(),
-    "temperature": temperature
-})
-
-# save back to file
 with open("data.json", "w") as f:
-    json.dump(data_store, f, indent=2)
+    json.dump(data, f, indent=2)
