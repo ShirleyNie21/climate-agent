@@ -1,22 +1,24 @@
-import time
 import json
 import streamlit as st
-import time
 
 st.title("🌤️ Weather Dashboard")
 
 # -------------------------
-# LOAD DATA
+# LOAD DATA (SAFE)
 # -------------------------
-with open("data.json", "r") as f:
-    data = json.load(f)
+try:
+    with open("data.json", "r") as f:
+        data = json.load(f)
+except FileNotFoundError:
+    st.error("No data.json found. Run agent.py first.")
+    st.stop()
 
-readings = data["readings"]
+readings = data.get("readings", [])
 
 st.write("Total readings:", len(readings))
 
 # -------------------------
-# REFRESH CONTROL
+# MANUAL REFRESH
 # -------------------------
 if st.button("🔄 Refresh Data"):
     st.rerun()
@@ -28,25 +30,24 @@ auto_refresh = st.checkbox("Auto-refresh every 5 seconds")
 # -------------------------
 st.subheader("📌 Latest Reading")
 
-if len(readings) > 0:
+if readings:
     st.write(readings[-1])
 else:
     st.write("No data yet — run agent.py first")
 
 # -------------------------
-# HISTORY CHART
+# CHART
 # -------------------------
 st.subheader("📊 Temperature History")
 
-temps = [r["temperature"] for r in readings]
+if readings:
+    temps = [r["temperature"] for r in readings]
 
-if len(temps) > 0:
     chart_data = {
-        "Time": [r["time"][-8:] for r in readings],
         "Temperature": temps
     }
-    
-    st.line_chart(chart_data, x="Time", y="Temperature")
+
+    st.line_chart(chart_data)
 else:
     st.write("No data for chart yet")
 
@@ -55,7 +56,9 @@ else:
 # -------------------------
 st.subheader("📈 Quick Stats")
 
-if len(temps) > 0:
+if readings:
+    temps = [r["temperature"] for r in readings]
+
     st.write("Average:", sum(temps) / len(temps))
     st.write("Max:", max(temps))
     st.write("Min:", min(temps))
@@ -63,12 +66,9 @@ else:
     st.write("Not enough data yet — run agent.py first")
 
 # -------------------------
-# AUTO REFRESH (SAFE)
+# AUTO REFRESH (OPTIONAL ONLY)
 # -------------------------
 if auto_refresh:
+    import time
     time.sleep(5)
     st.rerun()
-
-# auto refresh every 5 seconds
-time.sleep(5)
-st.rerun()
