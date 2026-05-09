@@ -34,3 +34,6 @@ if len(temps) > 0:
 else:
     st.write("Not enough data yet — run agent.py first")
 EOF
+
+time.sleep(5)
+st.rerun()
