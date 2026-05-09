@@ -1,5 +1,14 @@
 import json
+import time
+from datetime import datetime
+
 import streamlit as st
+
+st.set_page_config(
+    page_title="Weather Dashboard",
+    page_icon="🌤️",
+    layout="centered"
+)
 
 st.title("🌤️ Weather Dashboard")
 
@@ -15,15 +24,19 @@ except FileNotFoundError:
 
 readings = data.get("readings", [])
 
-st.write("Total readings:", len(readings))
+st.write(f"Total readings: {len(readings)}")
 
 # -------------------------
 # REFRESH CONTROL
 # -------------------------
-if st.button("🔄 Refresh Data"):
-    st.rerun()
+col1, col2 = st.columns([1, 2])
 
-auto_refresh = st.checkbox("Auto-refresh every 5 seconds")
+with col1:
+    if st.button("🔄 Refresh Data"):
+        st.rerun()
+
+with col2:
+    auto_refresh = st.checkbox("Auto-refresh every 5 seconds")
 
 # -------------------------
 # LATEST READING
@@ -33,20 +46,19 @@ st.subheader("📌 Latest Reading")
 if readings:
     latest = readings[-1]
 
+    formatted_time = datetime.fromisoformat(
+        latest["time"]
+    ).strftime("%b %d, %Y • %I:%M %p")
+
     st.metric(
         label="Current Temperature",
-        value=f"{latest['temperature']} °C"
+        value=f"{round(latest['temperature'], 1)} °C"
     )
 
-from datetime import datetime
+    st.caption(f"Last updated: {formatted_time}")
 
-formatted_time = datetime.fromisoformat(
-    latest["time"]
-).strftime("%b %d, %Y • %I:%M %p")
-
-st.caption(f"Last updated: {formatted_time}")
 else:
-    st.write("No data yet — run agent.py first")
+    st.warning("No data yet — run agent.py first")
 
 # -------------------------
 # TEMPERATURE CHART
@@ -56,13 +68,13 @@ st.subheader("📊 Temperature History")
 if readings:
     temps = [r["temperature"] for r in readings]
 
-    chart_data = {
-        "Temperature": temps
-    }
+    st.line_chart(
+        {"Temperature": temps},
+        use_container_width=True
+    )
 
-    st.line_chart(chart_data)
 else:
-    st.write("No data for chart yet")
+    st.info("No data for chart yet")
 
 # -------------------------
 # STATS
@@ -74,16 +86,27 @@ if readings:
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("Average", f"{sum(temps)/len(temps):.1f} °C")
-    col2.metric("Max", f"{max(temps):.1f} °C")
-    col3.metric("Min", f"{min(temps):.1f} °C")
+    col1.metric(
+        "Average",
+        f"{sum(temps)/len(temps):.1f} °C"
+    )
+
+    col2.metric(
+        "Max",
+        f"{max(temps):.1f} °C"
+    )
+
+    col3.metric(
+        "Min",
+        f"{min(temps):.1f} °C"
+    )
+
 else:
-    st.write("Not enough data yet — run agent.py first")
+    st.warning("Not enough data yet")
 
 # -------------------------
 # AUTO REFRESH
 # -------------------------
 if auto_refresh:
-    import time
     time.sleep(5)
     st.rerun()
