@@ -1,5 +1,6 @@
 cat > agent.py << 'EOF'
 import requests
+import json
 from datetime import datetime
 
 print("🚀 Agent started")
